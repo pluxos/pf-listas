@@ -2,7 +2,7 @@
 
 
 # Conteúdo
-Equações simples com uso de tuplas.
+Exercícios simples de manipulação de listas.
 
 # Exercícios simples
 
