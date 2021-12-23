@@ -1,0 +1,118 @@
+    name: GitHub Classroom Workflow
+    on: 
+       push:
+          paths: 
+             - 'src/Exercise.hs'
+
+    jobs:
+       runhaskell:
+           name: autograding
+           runs-on: ubuntu-latest # or macOS-latest, or windows-latest
+           steps:
+             - uses: actions/checkout@v2
+
+             # Calculating a cache key as a MD5 hash of the `stack.yaml`
+             # We use a separate _step_ here with a dedicated `id` so we can refer back to it in other steps.
+             - name: Cache Key
+               id: cache_key
+               run: echo ::set-output name=key::$(md5sum stack.yaml | awk '{print $1}')
+
+             # We'll cache the whole `.stack` directory, which contains all the pre-built dependencies, as
+             # well as the right version of GHC corresponding to our snapshot.
+             # Cache are also OS-specific, so we prefix the cache key with the current OS' name.
+             - name: Cache Dependencies
+               id: cache
+               uses: actions/cache@v2
+               with:
+                 path: ~/.stack
+                 key: ${{ runner.os }}-${{ steps.cache_key.outputs.key }}
+
+             - uses: haskell/actions/setup@v1
+               with:
+                  ghc-version: 'latest' # Exact version of ghc to use
+                  #cabal-version: 'latest' #Omitted, but defaults to 'latest'
+                  enable-stack: true
+                  #stack-version: 'latest'
+
+             # Building only the snapshot is made easy with stack `--only-snapshot` option. Yet, this step is
+             # made optional and only required if we haven't found any cache corresponding to our cache key.
+             - name: Build Snapshot
+               if: steps.cache.outputs.cache-hit != 'true'
+               run: stack --no-terminal test --bench --only-snapshot
+
+             # the actual test run
+             - name: Run the test
+               id: tester
+               continue-on-error: true
+               run: |
+                  stack --no-terminal test | tee output.txt
+                  echo "num_tests=$(cat output.txt | grep examples | grep failures | cut -d' ' -f1)" >> $GITHUB_ENV
+                  echo "failed_tests=$(cat output.txt | grep examples | cut -d' ' -f3)" >> $GITHUB_ENV
+
+             # the grading 
+             - name: Grade
+               id: grader
+               continue-on-error: true
+               run: |
+                  echo '::echo::on'
+                  echo "Total de testes: ${{ env.num_tests }}"
+                  echo "Testes fracassados: ${{ env.failed_tests }}" 
+                  echo "::set-output name=MAX::${{ env.num_tests }}"
+                  echo "::set-output name=GOT::$(echo ${{ env.num_tests }} '-' ${{ env.failed_tests }} | bc)"
+                  echo "::set-output name=GRADE::$(echo '(1 - ' ${{ env.failed_tests }} '/' ${{ env.num_tests }} ') * 100' | bc -l)"
+
+             # the actual test run
+             #- name: Do the grading
+             #  id: grader
+             #  continue-on-error: true
+             #  run: |
+
+             # make dir for badges
+             - name: badges branch and make dir
+               run: |
+                 git checkout badges || git checkout -b badges
+                 mkdir -p .github/badges
+        
+             # make points badge
+             - name: points badge
+               uses: emibcn/badge-action@v1
+               with:
+                 LABEL: "Nota ${{ steps.grader.outputs.GOT}} / ${{ steps.grader.outputs.MAX}} = "
+                 STATUS: ${{ steps.grader.outputs.GRADE}}
+                 COLOR: ${{
+                  steps.grader.outputs.GRADE > 90 && 'green'              ||
+                  steps.grader.outputs.GRADE > 80 && 'yellow,green'       ||
+                  steps.grader.outputs.GRADE > 70 && 'yellow'             ||
+                  steps.grader.outputs.GRADE > 60 && 'orange,yellow'      ||
+                  steps.grader.outputs.GRADE > 50 && 'orange'             ||
+                  steps.grader.outputs.GRADE > 40 && 'red,orange'         ||
+                  steps.grader.outputs.GRADE > 30 && 'red,red,orange'     ||
+                  steps.grader.outputs.GRADE > 20 && 'red,red,red,orange' ||
+                  'red' }}
+                 path: '.github/badges/points.svg'
+
+             - name: Upload badge as artifact
+               uses: actions/upload-artifact@v2
+               with:
+                 name: badge
+                 path: '.github/badges/points.svg'
+                 if-no-files-found: error
+
+             # commit and push badge if score has changed
+             - name: Commit badge
+               run: |
+                 git config --local user.email "action@github.com"
+                 git config --local user.name "GitHub Action"
+                 git add '.github/badges/points.svg'
+                 git commit -m "Add/Update badge"
+               continue-on-error: true
+             - name: Push badge commit
+               uses: ad-m/github-push-action@master
+               if: success()
+               with:
+                 github_token: ${{ secrets.GITHUB_TOKEN }}
+                 branch: badges
+                 force: true
+
+
+
