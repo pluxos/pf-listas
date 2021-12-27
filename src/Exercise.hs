@@ -1,102 +1,286 @@
 module Exercise where
+import Data.Char (isLetter, toLower)
+import Data.List (group)
 
--- Defina as seguintes funções usando tuplas. Inclua os tipos para todas as funções definidas.
-
-{-
-Convencionemos que uma carta de baralho é uma tupla em que 
- - o primeiro elemento é o valor da carta (1,2,3,4,5,6,7,8,9,10,11,12,13)
- - o segundo é o naipe ("ouro", "copas", "espada", "paus").
--}
+-- Defina as seguintes funções sem usar recursão.
 
 {-
-Uma função que receba uma carta retorne seu naipe.
+Defina uma função que retorne a sub-lista com t elementos começando na posição i da lista dada.
 
 Entrada:
-    - c1: carta
+    - l: lista 
+    - i: inteiro com posição inicial da sub-lista
+    - t: inteiro com tamanho da sub-lista.
 
-Resultado: naipe da carta
+>>> subListaDeAte "entrada" 2 4
+"trad"
+
+>>> subListaDeAte [1..10] 2 4
+[3,4,5,6]
+
+>>> subListaDeAte [1..4] 2 4
+[3,4]
+
+>>> subListaDeAte [] 2 4
+[]
+
 -}
-naipe :: (Int,String) -> String
-naipe c1 = undefined 
+subListaDeAte l i t = undefined 
+
+
 
 {-
-Uma função que receba uma carta retorne seu valor.
+Defina uma função que retorne a sub-lista com os últimos u elementos da lista de entrada.
 
 Entrada:
-    - c1: carta
+    - l: lista
+    - u: inteiro com a quantidade de elementos da sub-lista que termina a string de entrada.
 
-Resultado: valor da carta
+>>> últimosUElementos [1..10] 5
+[6,7,8,9,10]
+
+>>> últimosUElementos [1..4] 5
+[1,2,3,4]
+
+>>> últimosUElementos [] 5
+[]
+
 -}
-valor :: (Int,String) -> Int
-valor c1 = undefined 
+últimosUElementos l u = undefined 
+
+{-
+Defina uma função que receba duas listas e retorne a resultado da concatenação das listas de t elementos começando na posição i das listas de entrada.
+
+Entrada
+    - l1: lista
+    - l2: lista
+    - i: inteiro com posição de início das sub-listas.
+    - t: inteiro com tamanho das sub-listas.
+
+>>> subStringDeAteAppend [1..10] [20..45] 3 5
+[4,5,6,7,8,23,24,25,26,27]
+
+>>> subStringDeAteAppend [1..3] [20..24] 3 5 
+[23,24]
+
+>>> subStringDeAteAppend [1..5] [20..24] 3 5 
+[4,5,23,24]
+-}
+
+subStringDeAteAppend l1 l2 i u = undefined 
+
 
 
 {-
-Uma função que receba duas cartas e diga se a primeira é menor que a segunda.
-Uma carta c1 é menor que uma carta c2 se valor c1 < valor2 OU se valor c1 == valor c2 e naipe c1 < c2.
-"copas" < "espada" < "ouro" < "paus"
+Defina uma função que jogue fora os elementos inicias de uma lista s até que o restante da lista se inicie com um elemento c ou que a lista termine.
 
 Entrada:
-    - c1, c2: cartas
-Resultado: True ou False
+    - l: lista
+    - e: elemento do mesmo tipo.
+
+Resultado: 
+    - a string resultante.
+
+Exemplos:
+>>>jogarForaAté "Eu quis dizer, voce nao quis escutar." ','
+", voce nao quis escutar."
+
+>>>jogarForaAté "Eu quis dizer, voce nao quis escutar." 'z'
+"zer, voce nao quis escutar."
+
+>>>jogarForaAté "Eu quis dizer, voce nao quis escutar." 'v'
+"voce nao quis escutar."
+
 -}
 
-cartaÉMenor c1 c2 = undefined 
+jogarForaAté l e = undefined 
+
+
 
 {-
-Uma função que receba duas cartas e diga se a primeira é igual à segunda.
+Um palíndromo é uma palavra que pode ser lida da esquerda para a direita ou da direita para a esquerda com o mesmo resultado, como por exemplo, ovo e Natan.
+O conceito pode ser estendido para frases se ignorarmos espaços, acentos e sinais de pontuação, por exemplo, "Olé! Maracujá, caju, caramelo.".
+
+Escreva uma função que teste se a entrada é um palíndromo.
+Assuma que a entrada não tem acentos ou pontuações e que ou todas as letras são maiúsculas ou todas são minúsculas.
+
+Use isLetter e filter para ignorar o que não for letra.
+Somente caracteres não acentuados foram usados.
 
 Entrada:
-    - c1, c2: cartas
-Resultado: True ou False
+    - s - String
+
+Resultado: 
+    - True se s é um palíndromo; False caso contrário.
+
+Exemplos:
+>>>palíndromo "ana"
+True
+>>>palíndromo "jose"
+False
+
+>>>palíndromo "natan foi viajar"
+False
+
+>>>palíndromo "natan"
+True
+
+>>> palíndromo "Ole! Maracuja, caju, caramelo."
+True
 -}
 
-cartaÉIgual c1 c2 = undefined 
+palíndromo :: String -> Bool
+palíndromo s = undefined 
+
 
 {-
-Uma função que receba duas cartas e diga se a primeira é maior que a segunda.
+O conceito de palíndromo pode ser aplicado a qualquer lista, por exemplo de inteiros. Neste caso, [1,2,3,4,5,4,3,2,1] seria um palíndromo.
+Escreva uma função que teste se uma lista qualquer é um palíndromo.
 
 Entrada:
-    - c1, c2: cartas
-Resultado: True ou False
+    - s - lista de "qualquer" coisa.
+
+Resultado: 
+    - True se s é uma lista palíndroma; False caso contrário.
+
+Exemplos:
+>>>palíndromo' "ana"
+True
+>>>palíndromo' "jose"
+False
+
+>>>palíndromo' [1,2,3]
+False
+
+>>>palíndromo' [True,False,False,True]
+True
+
 -}
-cartaÉMaior c1 c2 = undefined 
+
+palíndromo' s = undefined 
 
 
 {-
-Uma função que recebe 3 cartas c1 c2 c3 e retorne uma tripla com c2 c2 e c3, em ordem decrescente.
+Frequentemente precisamos limpar dados entrados por usuários em fomulários.
+Por exemplo, precisamos tirar os espaços no início e fim dos dados digitados, como em " José de Abreu  "
+Algumas linguagens tem uma função trim que remove tais espaços em branco.
+
+Implemente uma função que elimine todos os espaços em branco no início e fim de uma string.
+
+>>>trim "Implemente uma"
+"Implemente uma"
+
+>>>trim " Implemente uma "
+"Implemente uma"
+
+>>>trim "  Implemente uma  "
+"Implemente uma"
+
+>>>trim "   Implemente uma"
+"Implemente uma"
+
+>>>trim "Implemente uma   "
+"Implemente uma"
 -}
-ordenaCartas c1 c2 c3 = undefined 
+
+trim :: String -> String
+trim s = undefined 
 
 
 {-
-Uma função que receba uma tupla de 3 cartas, m1 m2 m3, ordenadas de forma decrescente, e diga se formam um jogo, onde,
-m1 m2 e m3 formam um jogo se e somente se
-    - OU naipe m1 == naipe m2 == naipe m3 E valor m1 == valor m2 + 1 == valor m3 + 2
-    - OU naipe m1 =/= naipe m2 =/= naipe m3 =/= m1 E valor m1 == valor m2 == valor m3
+Escreva uma função que retorne duplas formadas pelos por elementos das duas metades da lista, sendo o primeiro elemento do resultado formado pelo 
+primeiro elemento da primeira metade da lista mais o primeiro da segunda metade da lista, o segundo elemento formado pelo segundo elemento da primeira
+metade mais o segundo elemento da segunda metade e assim por diante.
 
-Entrada:
-    - (m1, m2, m3): cartas
-Resultado: True ou False
+Dica: splitAt e length
+
+>>>combinaMetades [1,2,3,4,5,6]
+[(1,4),(2,5),(3,6)]
+
+>>>combinaMetades [1,2,3,4,5,6,7]
+[(1,4),(2,5),(3,6)]
+
 -}
-éJogo c1 c2 c3 = undefined 
+
+combinaMetades l = undefined 
 
 {-
-Defina uma função que receba duas tuplas de 3 cartas ordenadas de forma decrescente, compare as tuplas, e retorne a maior dentre as duas tuplas.
-Uma tupla t1 é menor que uma tupla t2 se e somente se
-- a primeira carta de t1 é menor que a primeira de t2 OU
-- as primeiras cartas são iguais mas a segunda carta de t1 é menor que a segunda de t2
-- as primeiras e segundas cartas são iguais mas a terceira carta de t1 é menor que a terceira de t2
+Escreva uma função que reverta combinaMetades. Ou seja
+>>>descombinaMetades [(1,4),(2,5),(3,6)] 
+[1,2,3,4,5,6]
 -}
-maiorMão t1 t2 = undefined 
+descombinaMetades l = undefined 
+
+
+
+
 
 {-
-Defina uma função que receba duas tuplas de 3 cartas ordenadas de forma decrescente, e compare as tuplas para dizer qual ganha, ou se houve empate.
-Uma tupla t1 ganha de uma tupla t2 se 
-- t1 é um jogo mas t2 não é um jogo
-- t1 e t2 são um jogo mas t1 é maior que t2.
-- se nenhuma é jogo e t1 é maior que t2
-- No caso de empate, retorne a tupla ((0,""),(0,""),(0,""))
+Escreva uma função que separe repetições consecutivas dentro de uma lista.
+
+Dica: investigue a função group.
+
+>>>empacote "aaaabccaadeeee"
+["aaaa","b","cc","aa","d","eeee"]
+
+>>>empacote ""
+[]
+
+
+>>>empacote [1,1,12,2,2,3,3,3,4,4,4,3,3,3,2,2,2,1,1,1]
+[[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3],[2,2,2],[1,1,1]]
+
 -}
 
-mãoGanhadora tupla1 tupla2 = undefined
+empacote :: (Eq a) => [a] -> [[a]]
+empacote l = undefined 
+
+
+{-
+Dado uma lista empacotada, como a gerada pela função anterior, gere uma lista de duplas tal que:
+- para cada pacote haja uma dupla no resultado.
+- a dupla tem como primeiro elemento o dado repetido na lista correspondente e como segundo elemento o comprimento de tal lista.
+
+>>>compacte [[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3],[2,2,2],[1,1,1]]
+[(1,2),(12,1),(2,2),(3,3),(4,3),(3,3),(2,3),(1,3)]
+
+>>>compacte ["aaaa","b","cc","aa","d","eeee"]
+[('a',4),('b',1),('c',2),('a',2),('d',1),('e',4)]
+
+>>>compacte []
+[]
+
+>>>compacte [[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3]]
+[(1,2),(12,1),(2,2),(3,3),(4,3),(3,3)]
+
+-}
+compacte l = undefined 
+
+
+{-
+Escreva uma função que reverta a função compacte, definida acima, ou seja, tal que
+>>>descompacte (compacte [[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3]]) == [[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3]]
+True
+
+>>> descompacte [(1,2),(12,1),(2,2),(3,3),(4,3),(3,3)]
+[[1,1],[12],[2,2],[3,3,3],[4,4,4],[3,3,3]]
+
+
+Dica: use replicate
+
+-}
+
+descompacte l = undefined 
+
+
+{-
+Escreva uma função que reverta a função empacote, acima, definida acima, ou seja, tal que
+>>>desempacote (empacote "aaaabccaadeeee") == "aaaabccaadeeee"
+True
+
+>>> desempacote ["aaaa","b","cc","aa","d","eeee"]
+"aaaabccaadeeee"
+
+-}
+
+desempacote l = undefined 
