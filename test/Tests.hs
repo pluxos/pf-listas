@@ -109,7 +109,7 @@ specs = do
             it "strings" $ do
               compacte ["aaaa","b","cc","aa","d","eeee"] `shouldBe` [('a',4),('b',1),('c',2),('a',2),('d',1),('e',4)]
             it "vazio" $ do
-              compacte ([]::[[Int]]) `shouldBe` []
+              compacte ([]::[[Int]]) `shouldBe`  ([]::[(Int,Int)])
 
           describe "descompacte" $ do
             it "simples" $ do
